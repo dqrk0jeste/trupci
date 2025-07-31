@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>trupci</title>
+  </head>
+  <body>
+    <h1>zapremina trupaca</h1>
+    <form>
+      <label for="diametar">prečnik (cm) </label>
+      <input id="diametar" type="number" step="any" required><br><br>
+      <label for="length">dužina (cm) </label>
+      <input id="length" type="number" step="any" required><br><br>
+      <button type="submit">dodaj</button>
+    </form>
+    <ul id="list"></ul>
+    <h2>ukupno: <span id="volume">0.000</span> m^2</h2>
+    <script>
+      const diametarInput = document.getElementById("diametar")
+      const lengthInput = document.getElementById("length")
+      const volumeElement = document.getElementById("volume")
+      const formElement = document.querySelector("form")
+      const listElement = document.querySelector("ul")
+
+      const list = []
+
+      function renderList() {
+        let volume = 0.0
+
+        listElement.innerHTML = ""
+        list.forEach((item, index) => {
+          const li = document.createElement("li");
+          const text = document.createElement("span")
+          const button = document.createElement("button")
+
+          volume += item.diametar * item.diametar / 4.0 * 3.1415926 * item.length
+
+          text.textContent = `${item.diametar}cm, ${item.length}cm `
+          button.textContent = "ukloni";
+
+          button.addEventListener("click", () => {
+            list.splice(index, 1)
+            renderList()
+          })
+
+          li.appendChild(text)
+          li.appendChild(button)
+          listElement.appendChild(li)
+        })
+
+        volumeElement.textContent = (volume / (100 * 100 * 100)).toFixed(10)
+      }
+
+      formElement.addEventListener("submit", (e) => {
+        e.preventDefault()
+
+        if(diametarInput.value == "" || lengthInput == "")
+          return
+
+        list.push({ diametar: Number(diametarInput.value), length: Number(lengthInput.value)})
+        renderList(listElement, list)
+      })
+    </script>
+  </body>
+</html> 
